@@ -1,0 +1,2902 @@
+{
+    "name": "3. CONTENT FORMATTER: Trigger \"Yes\" Send Test Email -> Format Content using ChatGPT -> Create Brevo Email Campaign",
+    "flow": [
+        {
+            "id": 2,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 2637978,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "Triggers when \"Yes\" on Finalize Test Email"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "test hook213"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "google-sheets:filterRows",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 8131829
+            },
+            "mapper": {
+                "from": "drive",
+                "filter": [
+                    [
+                        {
+                            "a": "C",
+                            "b": "Yes",
+                            "o": "text:equal:ci"
+                        },
+                        {
+                            "a": "D",
+                            "b": "sent",
+                            "o": "text:notequal:ci"
+                        }
+                    ]
+                ],
+                "sheetId": "Newsletter Drafts",
+                "sortOrder": "asc",
+                "spreadsheetId": "14Q2Fd_dYPi06HPuT6hLnbymzKU-cKiER3gJlfibhzwc",
+                "tableFirstRow": "A1:CZ1",
+                "includesHeaders": true,
+                "valueRenderOption": "FORMATTED_VALUE",
+                "dateTimeRenderOption": "FORMATTED_STRING"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "Searches the Database"
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "Select from My Drive"
+                        },
+                        "orderBy": {
+                            "mode": "chose"
+                        },
+                        "sheetId": {
+                            "mode": "chose",
+                            "label": "Newsletter Drafts"
+                        },
+                        "sortOrder": {
+                            "mode": "chose",
+                            "label": "Ascending"
+                        },
+                        "spreadsheetId": {
+                            "mode": "chose",
+                            "label": "Newsletter Process Flow Database"
+                        },
+                        "tableFirstRow": {
+                            "label": "A-CZ"
+                        },
+                        "includesHeaders": {
+                            "mode": "chose",
+                            "label": "Yes"
+                        },
+                        "valueRenderOption": {
+                            "mode": "chose",
+                            "label": "Formatted value"
+                        },
+                        "dateTimeRenderOption": {
+                            "mode": "chose",
+                            "label": "Formatted string"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "Lem Sheets Test (airdrop.zones@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "valueRenderOption",
+                        "type": "select",
+                        "label": "Value render option",
+                        "validate": {
+                            "enum": [
+                                "FORMATTED_VALUE",
+                                "UNFORMATTED_VALUE",
+                                "FORMULA"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "dateTimeRenderOption",
+                        "type": "select",
+                        "label": "Date and time render option",
+                        "validate": {
+                            "enum": [
+                                "SERIAL_NUMBER",
+                                "FORMATTED_STRING"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "select",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tableFirstRow",
+                        "type": "select",
+                        "label": "Column range",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "A1:Z1",
+                                "A1:BZ1",
+                                "A1:CZ1",
+                                "A1:DZ1",
+                                "A1:MZ1",
+                                "A1:ZZ1",
+                                "A1:AZZ1",
+                                "A1:BZZ1",
+                                "A1:CZZ1",
+                                "A1:DZZ1",
+                                "A1:MZZ1",
+                                "A1:ZZZ1"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "type": "filter",
+                        "label": "Filter",
+                        "options": "rpc://google-sheets/2/rpcGetFilterKeys?includesHeaders=true"
+                    },
+                    {
+                        "name": "orderBy",
+                        "type": "select",
+                        "label": "Order by"
+                    },
+                    {
+                        "name": "sortOrder",
+                        "type": "select",
+                        "label": "Sort order",
+                        "validate": {
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__IMTLENGTH__",
+                        "type": "uinteger",
+                        "label": "Total number of bundles"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "type": "uinteger",
+                        "label": "Bundle order position"
+                    },
+                    {
+                        "name": "__ROW_NUMBER__",
+                        "type": "number",
+                        "label": "Row number"
+                    },
+                    {
+                        "name": "__SPREADSHEET_ID__",
+                        "type": "text",
+                        "label": "Spreadsheet ID"
+                    },
+                    {
+                        "name": "__SHEET__",
+                        "type": "text",
+                        "label": "Sheet"
+                    },
+                    {
+                        "name": "0",
+                        "type": "text",
+                        "label": "Newsletter Draft Created (A)"
+                    },
+                    {
+                        "name": "1",
+                        "type": "text",
+                        "label": "Google Doc Link (B)"
+                    },
+                    {
+                        "name": "2",
+                        "type": "text",
+                        "label": "Finalize and Push a Test Email? (C)"
+                    },
+                    {
+                        "name": "3",
+                        "type": "text",
+                        "label": "Test Email Status (D)"
+                    },
+                    {
+                        "name": "4",
+                        "type": "text",
+                        "label": "Send Final Newsletter to Brevo List (E)"
+                    },
+                    {
+                        "name": "5",
+                        "type": "text",
+                        "label": "Date Newsletter Sent (F)"
+                    },
+                    {
+                        "name": "6",
+                        "type": "text",
+                        "label": "Document ID (G)"
+                    },
+                    {
+                        "name": "7",
+                        "type": "text",
+                        "label": "Brevo Campaign ID (H)"
+                    },
+                    {
+                        "name": "8",
+                        "type": "text",
+                        "label": "(I)"
+                    },
+                    {
+                        "name": "9",
+                        "type": "text",
+                        "label": "(J)"
+                    },
+                    {
+                        "name": "10",
+                        "type": "text",
+                        "label": "(K)"
+                    },
+                    {
+                        "name": "11",
+                        "type": "text",
+                        "label": "(L)"
+                    },
+                    {
+                        "name": "12",
+                        "type": "text",
+                        "label": "(M)"
+                    },
+                    {
+                        "name": "13",
+                        "type": "text",
+                        "label": "(N)"
+                    },
+                    {
+                        "name": "14",
+                        "type": "text",
+                        "label": "(O)"
+                    },
+                    {
+                        "name": "15",
+                        "type": "text",
+                        "label": "(P)"
+                    },
+                    {
+                        "name": "16",
+                        "type": "text",
+                        "label": "(Q)"
+                    },
+                    {
+                        "name": "17",
+                        "type": "text",
+                        "label": "(R)"
+                    },
+                    {
+                        "name": "18",
+                        "type": "text",
+                        "label": "(S)"
+                    },
+                    {
+                        "name": "19",
+                        "type": "text",
+                        "label": "(T)"
+                    },
+                    {
+                        "name": "20",
+                        "type": "text",
+                        "label": "(U)"
+                    },
+                    {
+                        "name": "21",
+                        "type": "text",
+                        "label": "(V)"
+                    },
+                    {
+                        "name": "22",
+                        "type": "text",
+                        "label": "(W)"
+                    },
+                    {
+                        "name": "23",
+                        "type": "text",
+                        "label": "(X)"
+                    },
+                    {
+                        "name": "24",
+                        "type": "text",
+                        "label": "(Y)"
+                    },
+                    {
+                        "name": "25",
+                        "type": "text",
+                        "label": "(Z)"
+                    },
+                    {
+                        "name": "26",
+                        "type": "text",
+                        "label": "(AA)"
+                    },
+                    {
+                        "name": "27",
+                        "type": "text",
+                        "label": "(AB)"
+                    },
+                    {
+                        "name": "28",
+                        "type": "text",
+                        "label": "(AC)"
+                    },
+                    {
+                        "name": "29",
+                        "type": "text",
+                        "label": "(AD)"
+                    },
+                    {
+                        "name": "30",
+                        "type": "text",
+                        "label": "(AE)"
+                    },
+                    {
+                        "name": "31",
+                        "type": "text",
+                        "label": "(AF)"
+                    },
+                    {
+                        "name": "32",
+                        "type": "text",
+                        "label": "(AG)"
+                    },
+                    {
+                        "name": "33",
+                        "type": "text",
+                        "label": "(AH)"
+                    },
+                    {
+                        "name": "34",
+                        "type": "text",
+                        "label": "(AI)"
+                    },
+                    {
+                        "name": "35",
+                        "type": "text",
+                        "label": "(AJ)"
+                    },
+                    {
+                        "name": "36",
+                        "type": "text",
+                        "label": "(AK)"
+                    },
+                    {
+                        "name": "37",
+                        "type": "text",
+                        "label": "(AL)"
+                    },
+                    {
+                        "name": "38",
+                        "type": "text",
+                        "label": "(AM)"
+                    },
+                    {
+                        "name": "39",
+                        "type": "text",
+                        "label": "(AN)"
+                    },
+                    {
+                        "name": "40",
+                        "type": "text",
+                        "label": "(AO)"
+                    },
+                    {
+                        "name": "41",
+                        "type": "text",
+                        "label": "(AP)"
+                    },
+                    {
+                        "name": "42",
+                        "type": "text",
+                        "label": "(AQ)"
+                    },
+                    {
+                        "name": "43",
+                        "type": "text",
+                        "label": "(AR)"
+                    },
+                    {
+                        "name": "44",
+                        "type": "text",
+                        "label": "(AS)"
+                    },
+                    {
+                        "name": "45",
+                        "type": "text",
+                        "label": "(AT)"
+                    },
+                    {
+                        "name": "46",
+                        "type": "text",
+                        "label": "(AU)"
+                    },
+                    {
+                        "name": "47",
+                        "type": "text",
+                        "label": "(AV)"
+                    },
+                    {
+                        "name": "48",
+                        "type": "text",
+                        "label": "(AW)"
+                    },
+                    {
+                        "name": "49",
+                        "type": "text",
+                        "label": "(AX)"
+                    },
+                    {
+                        "name": "50",
+                        "type": "text",
+                        "label": "(AY)"
+                    },
+                    {
+                        "name": "51",
+                        "type": "text",
+                        "label": "(AZ)"
+                    },
+                    {
+                        "name": "52",
+                        "type": "text",
+                        "label": "(BA)"
+                    },
+                    {
+                        "name": "53",
+                        "type": "text",
+                        "label": "(BB)"
+                    },
+                    {
+                        "name": "54",
+                        "type": "text",
+                        "label": "(BC)"
+                    },
+                    {
+                        "name": "55",
+                        "type": "text",
+                        "label": "(BD)"
+                    },
+                    {
+                        "name": "56",
+                        "type": "text",
+                        "label": "(BE)"
+                    },
+                    {
+                        "name": "57",
+                        "type": "text",
+                        "label": "(BF)"
+                    },
+                    {
+                        "name": "58",
+                        "type": "text",
+                        "label": "(BG)"
+                    },
+                    {
+                        "name": "59",
+                        "type": "text",
+                        "label": "(BH)"
+                    },
+                    {
+                        "name": "60",
+                        "type": "text",
+                        "label": "(BI)"
+                    },
+                    {
+                        "name": "61",
+                        "type": "text",
+                        "label": "(BJ)"
+                    },
+                    {
+                        "name": "62",
+                        "type": "text",
+                        "label": "(BK)"
+                    },
+                    {
+                        "name": "63",
+                        "type": "text",
+                        "label": "(BL)"
+                    },
+                    {
+                        "name": "64",
+                        "type": "text",
+                        "label": "(BM)"
+                    },
+                    {
+                        "name": "65",
+                        "type": "text",
+                        "label": "(BN)"
+                    },
+                    {
+                        "name": "66",
+                        "type": "text",
+                        "label": "(BO)"
+                    },
+                    {
+                        "name": "67",
+                        "type": "text",
+                        "label": "(BP)"
+                    },
+                    {
+                        "name": "68",
+                        "type": "text",
+                        "label": "(BQ)"
+                    },
+                    {
+                        "name": "69",
+                        "type": "text",
+                        "label": "(BR)"
+                    },
+                    {
+                        "name": "70",
+                        "type": "text",
+                        "label": "(BS)"
+                    },
+                    {
+                        "name": "71",
+                        "type": "text",
+                        "label": "(BT)"
+                    },
+                    {
+                        "name": "72",
+                        "type": "text",
+                        "label": "(BU)"
+                    },
+                    {
+                        "name": "73",
+                        "type": "text",
+                        "label": "(BV)"
+                    },
+                    {
+                        "name": "74",
+                        "type": "text",
+                        "label": "(BW)"
+                    },
+                    {
+                        "name": "75",
+                        "type": "text",
+                        "label": "(BX)"
+                    },
+                    {
+                        "name": "76",
+                        "type": "text",
+                        "label": "(BY)"
+                    },
+                    {
+                        "name": "77",
+                        "type": "text",
+                        "label": "(BZ)"
+                    },
+                    {
+                        "name": "78",
+                        "type": "text",
+                        "label": "(CA)"
+                    },
+                    {
+                        "name": "79",
+                        "type": "text",
+                        "label": "(CB)"
+                    },
+                    {
+                        "name": "80",
+                        "type": "text",
+                        "label": "(CC)"
+                    },
+                    {
+                        "name": "81",
+                        "type": "text",
+                        "label": "(CD)"
+                    },
+                    {
+                        "name": "82",
+                        "type": "text",
+                        "label": "(CE)"
+                    },
+                    {
+                        "name": "83",
+                        "type": "text",
+                        "label": "(CF)"
+                    },
+                    {
+                        "name": "84",
+                        "type": "text",
+                        "label": "(CG)"
+                    },
+                    {
+                        "name": "85",
+                        "type": "text",
+                        "label": "(CH)"
+                    },
+                    {
+                        "name": "86",
+                        "type": "text",
+                        "label": "(CI)"
+                    },
+                    {
+                        "name": "87",
+                        "type": "text",
+                        "label": "(CJ)"
+                    },
+                    {
+                        "name": "88",
+                        "type": "text",
+                        "label": "(CK)"
+                    },
+                    {
+                        "name": "89",
+                        "type": "text",
+                        "label": "(CL)"
+                    },
+                    {
+                        "name": "90",
+                        "type": "text",
+                        "label": "(CM)"
+                    },
+                    {
+                        "name": "91",
+                        "type": "text",
+                        "label": "(CN)"
+                    },
+                    {
+                        "name": "92",
+                        "type": "text",
+                        "label": "(CO)"
+                    },
+                    {
+                        "name": "93",
+                        "type": "text",
+                        "label": "(CP)"
+                    },
+                    {
+                        "name": "94",
+                        "type": "text",
+                        "label": "(CQ)"
+                    },
+                    {
+                        "name": "95",
+                        "type": "text",
+                        "label": "(CR)"
+                    },
+                    {
+                        "name": "96",
+                        "type": "text",
+                        "label": "(CS)"
+                    },
+                    {
+                        "name": "97",
+                        "type": "text",
+                        "label": "(CT)"
+                    },
+                    {
+                        "name": "98",
+                        "type": "text",
+                        "label": "(CU)"
+                    },
+                    {
+                        "name": "99",
+                        "type": "text",
+                        "label": "(CV)"
+                    },
+                    {
+                        "name": "100",
+                        "type": "text",
+                        "label": "(CW)"
+                    },
+                    {
+                        "name": "101",
+                        "type": "text",
+                        "label": "(CX)"
+                    },
+                    {
+                        "name": "102",
+                        "type": "text",
+                        "label": "(CY)"
+                    },
+                    {
+                        "name": "103",
+                        "type": "text",
+                        "label": "(CZ)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "google-docs:getADocument",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 8131829
+            },
+            "mapper": {
+                "filter": "image",
+                "select": "map",
+                "document": "{{3.`6`}}",
+                "includeTabsContent": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "Get Content"
+                },
+                "restore": {
+                    "expect": {
+                        "filter": {
+                            "label": "Image"
+                        },
+                        "select": {
+                            "label": "By Mapping"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "Lem Sheets Test (airdrop.zones@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Get Content of a Document",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "dropdown"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "includeTabsContent",
+                        "type": "boolean",
+                        "label": "Include Tabs Content",
+                        "required": true
+                    },
+                    {
+                        "name": "filter",
+                        "type": "select",
+                        "label": "Filter",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "image",
+                                "drawing",
+                                "chart"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "document",
+                        "type": "text",
+                        "label": "Document ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "openai-gpt-3:CreateCompletion",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 9447207
+            },
+            "mapper": {
+                "model": "gpt-4.1",
+                "top_p": "1",
+                "select": "chat",
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "You're task is to convert the newsletter input data coming from Google Document text into an HTML format.\n\nCreate different table for every \"SUBSECTIONS\" together with their {IMAGE SOURCE}, {CITATION LINK} and {SUBSECTION CONTENT}. The Subsections content are separated by -----.\n\nCreate one table for \"SOCIAL MEDIA CONTENTS\" section together with their {TITLE}, {CITATION LINK} and {SOCIALMEDIA OVERVIEW}.\n\nCreate one table for \"AI TOOLS AND UPDATES\" section together with their {TITLE}, {CITATION LINK} and {AITOOLS OVERVIEW}.\n\nAdd color blue italic <i> formatting on 1 important phrase for each sections EXCEPT for the \"PROMPT OF DAY SECTION\" and \"AI TOOLS SECTION\". Add this on all sections including conclusion and serrala insights.\n\nI will provide the HTML format below.\n\n===============\n\nInput Data:\n{{4.text}}\n\n===============\n\nFinal Output in HTML:\n\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body {\n      margin: 0;\n      padding: 0;\n      background-color: #f4f4f4;\n    }\n    table {\n      border-spacing: 0;\n      font-family: Arial, sans-serif;\n    }\n    img {\n      display: block;\n      border: 0;\n      outline: none;\n      text-decoration: none;\n    }\n  </style>\n</head>\n<body style=\"margin:0; padding:30px; background-color:#f4f4f4;\">\n\n  <!--[if mso]>\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n  <tr>\n  <td align=\"center\" valign=\"top\" width=\"100%\">\n  <![endif]-->\n\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; border-radius:8px; background-color:#ffffff;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px; color:#333333;\">\n        <img src=\"https://i.imgur.com/VyXF9pa.png\" alt=\"Intro Image\" width=\"600\" style=\"width:100%; height:auto; border-radius:8px;\">\n        <p><b>Welcome back!</b> {PUT ONE PARAGRAPH INTRO HERE}</p>\n        <hr style=\"border:none; border-top:1px solid #ccc;\">\n        <h2 style=\"margin-top:0; margin-bottom:12px;\">Today's Insights</h2>\n        {PUT THE BULLET FORM LIST HERE AS HTML}\n      </td>\n    </tr>\n  </table>\n\n  <!-- REPEATABLE SECTION -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h4 style=\"color:#228B22; margin:0 0 8px 0; font-size:18px; font-weight:bold;\">AI FINANCE NEWS</h4>\n<hr style=\"border:none; border-top:1px solid #ccc;\">\n        <center><img src=\"put the {IMAGE SOURCE} here\" alt=\"Subsection Image\" alt=\"Subsection Image\" width=\"360\" style=\"width:100%; max-width:360px; height:auto; border-radius:8px;\"></center>\n        <center><a href=\"put the {CITATION LINK} here\" style=\"color:#0000EE; font-size:12px;\"><i>put the {CITATION LINK} here</i></a></center>\n        <h3 style=\"margin-top:10px;\"> {SUBSECTION NEWS SOURCE}: <i>{SUBSECTION TITLE}</i></h3>\n        <p>put the {SUBSECTION CONTENT} paragraph here</p>\n      </td>\n    </tr>\n  </table>\n\n  <!-- SOCIAL SIGNALS SECTION -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h4 style=\"color:#228B22; font-size:18px; margin-top:0px;\">SOCIAL SIGNALS</h4>\n        <h2>Trending on Socials This Week</h2>\n        <hr style=\"border:none; border-top:1px solid #ccc;\">\n        <table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n          <tr>\n            <td valign=\"top\" width=\"20\">&#128200;</td>\n            <td><a href=\"put the {SOCIAL MEDIA CITATION LINK} here\"><strong>put the {SOCIAL MEDIA TITLE} here</strong></a>: put the {SOCIAL MEDIA OVERVIEW} here</td>\n          </tr>\n          <tr>\n            <td valign=\"top\" width=\"20\">&#128202;</td>\n            <td><a href=\"put the {SOCIAL MEDIA CITATION LINK} here\"><strong>put the {SOCIAL MEDIA TITLE} here</strong></a>: put the {SOCIAL MEDIA OVERVIEW} here</td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n\n  <!-- AI TOOLS SECTION -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h4 style=\"color:#228B22; font-size:18px;\">PRODUCTIVITY</h4>\n        <h2>AI Tools and Updates</h2>\n        <hr style=\"border:none; border-top:1px solid #ccc;\">\n        <table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n          <tr>\n            <td valign=\"top\" width=\"20\">&#9989;</td>\n            <td><a href=\"put the {AI TOOLS CITATION LINK} here\"><strong>put the {AI TOOLS TITLE} here</strong></a>: put the {AI TOOLS OVERVIEW} here</td>\n          </tr>\n          <tr>\n            <td valign=\"top\" width=\"20\">&#9989;</td>\n            <td><a href=\"put the {AI TOOLS CITATION LINK} here\"><strong>put the {AI TOOLS TITLE} here</strong></a>: put the {AI TOOLS OVERVIEW} here</td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n\n  <!-- PROMPT OF THE DAY -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h4 style=\"color:#228B22;\">PROMPT OF THE DAY</h4>\n        <h2>put the {PROMPT TITLE} here</h2>\n        <hr style=\"border:none; border-top:1px solid #ccc;\">\n        <center><table width=\"90%\" cellpadding=\"15\" cellspacing=\"0\" style=\"background-color:#454545; color:#ffffff; font-family: 'Lucida Console', monospace; border-radius:12px; font-size:13px;\">\n          <tr>\n            <td>\n              <p>put the {PROMPT CONTENT} here</p>\n            </td>\n          </tr>\n        </table></center>\n      </td>\n    </tr>\n  </table>\n\n  <!-- SERRALA BLOG -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h4 style=\"color:#228B22; font-size:20px;\">SERRALA DAILY INSIGHTS</h4>\n<img src=\"https://i.imgur.com/VyXF9pa.png\" alt=\"Intro Image\" width=\"600\" style=\"width:100%; height:auto; border-radius:8px;\"><br>\n<hr style=\"border:none; border-top:2px solid #ccc;\">\n        <table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n          <tr>\n            <td valign=\"top\" width=\"20\">put random business emoji here;</td>\n            <td><a href=\"put the {BLOG CITATION LINK} here\"><strong>put the {BLOG TITLE} here</strong></a>: put the {SUMMARY OF BLOG} here</td>\n          </tr>\n          <tr>\n            <td valign=\"top\" width=\"20\">put random business emoji here;</td>\n            <td><a href=\"put the {BLOG CITATION LINK} here\"><strong>put the {BLOG TITLE} here</strong></a>: put the {SUMMARY OF BLOG} here</td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n\n<!-- UPCOMING EVENTS -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h4 style=\"color:#228B22; font-size:20px;\">SERRALA UPCOMING EVENTS</h4>\n<img src=\"https://i.imgur.com/VyXF9pa.png\" alt=\"Intro Image\" width=\"600\" style=\"width:100%; height:auto; border-radius:8px;\"><br>\n<hr style=\"border:none; border-top:2px solid #ccc;\">\n        <table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n          <tr>\n            <td valign=\"top\" width=\"20\">put random business emoji here;</td>\n            <td><a href=\"put the {EVENT LINK} here\"><strong>put the {EVENT TITLE} here</strong></a>: put the {OVERVIEW OF EVENT} here</td>\n          </tr>\n          <tr>\n            <td valign=\"top\" width=\"20\">put random business emoji here;</td>\n            <td><a href=\"put the {EVENT LINK} here\"><strong>put the {EVENT TITLE} here</strong></a>: put the {OVERVIEW OF EVENT} here</td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n\n  <!-- CONCLUSION -->\n  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"650\" style=\"border:2px solid #ccc; background-color:#ffffff; margin-top:10px; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; font-family:Arial, sans-serif; font-size:16px;\">\n        <h2>Conclusion</h2>\n        <hr style=\"border:none; border-top:1px solid #ccc;\">\n        <p>{PUT THE CONCLUSION CONTENT PARAGRAPH HERE AS HTML}</p>\n      </td>\n    </tr>\n  </table>\n\n  <!--[if mso]>\n  </td></tr></table>\n  <![endif]-->\n\n</body>\n</html>\n\n\n===============\n\nRules:\n-just output the html code with content and nothing else\n-dont put ```html or any additional outputs\n-the content of the newsletter should be the same"
+                    }
+                ],
+                "max_tokens": "10000",
+                "temperature": "1",
+                "n_completions": "1",
+                "response_format": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "Format Content to HTML"
+                },
+                "restore": {
+                    "expect": {
+                        "stop": {
+                            "mode": "chose"
+                        },
+                        "model": {
+                            "mode": "chose",
+                            "label": "gpt-4.1 (system)"
+                        },
+                        "select": {
+                            "label": "Create a Chat Completion (GPT and o1 models)"
+                        },
+                        "messages": {
+                            "mode": "chose",
+                            "items": [
+                                {
+                                    "role": {
+                                        "mode": "chose",
+                                        "label": "Developer / System"
+                                    }
+                                }
+                            ]
+                        },
+                        "logit_bias": {
+                            "mode": "chose"
+                        },
+                        "tool_choice": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "response_format": {
+                            "mode": "chose",
+                            "label": "Text"
+                        },
+                        "additionalParameters": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            },
+                            "label": "My OpenAI connection1"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:openai-gpt-3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "chat",
+                                "prompt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "validate": {
+                            "max": 2,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P",
+                        "validate": {
+                            "max": 1,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "n_completions",
+                        "type": "number",
+                        "label": "Number"
+                    },
+                    {
+                        "name": "frequency_penalty",
+                        "type": "number",
+                        "label": "Frequency Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "presence_penalty",
+                        "type": "number",
+                        "label": "Presence Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "logit_bias",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "token",
+                                    "type": "text",
+                                    "label": "Token ID",
+                                    "required": true
+                                },
+                                {
+                                    "name": "probability",
+                                    "type": "number",
+                                    "label": "Probability",
+                                    "required": true,
+                                    "validate": {
+                                        "max": 100,
+                                        "min": -100
+                                    }
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Token Probability"
+                        },
+                        "type": "array",
+                        "label": "Token Probability"
+                    },
+                    {
+                        "name": "seed",
+                        "type": "integer",
+                        "label": "Seed"
+                    },
+                    {
+                        "name": "tool_choice",
+                        "type": "select",
+                        "label": "Tool Choice",
+                        "validate": {
+                            "enum": [
+                                "none",
+                                "auto",
+                                "required"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "stop",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Stop Sequence"
+                        },
+                        "type": "array",
+                        "label": "Stop Sequences",
+                        "validate": {
+                            "maxItems": 4
+                        }
+                    },
+                    {
+                        "name": "additionalParameters",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "key",
+                                    "type": "text",
+                                    "label": "Parameter Name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "select",
+                                    "label": "Input Type",
+                                    "options": [
+                                        {
+                                            "label": "Text",
+                                            "value": "text",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "text",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ],
+                                            "default": true
+                                        },
+                                        {
+                                            "label": "Number",
+                                            "value": "number",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "number",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Boolean",
+                                            "value": "boolean",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "boolean",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Date",
+                                            "value": "date",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "date",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Any",
+                                            "value": "any",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "any",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Input Parameter"
+                        },
+                        "type": "array",
+                        "label": "Other Input Parameters"
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "max_tokens",
+                        "type": "uinteger",
+                        "label": "Max Completion Tokens"
+                    },
+                    {
+                        "name": "messages",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "role",
+                                    "type": "select",
+                                    "label": "Role",
+                                    "options": {
+                                        "store": [
+                                            {
+                                                "label": "User",
+                                                "value": "user",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    },
+                                                    {
+                                                        "name": "imageInputType",
+                                                        "type": "select",
+                                                        "label": "Image Input Type",
+                                                        "options": [
+                                                            {
+                                                                "label": "URL",
+                                                                "value": "url",
+                                                                "nested": [
+                                                                    {
+                                                                        "help": "Make sure to use a publicly accessible URL.\nYou can test if your image is publicly accessible by opening the link in an incognito tab.",
+                                                                        "name": "imageUrl",
+                                                                        "type": "url",
+                                                                        "label": "Image URL"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Image File",
+                                                                "value": "file",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "imageFile",
+                                                                        "spec": [
+                                                                            {
+                                                                                "help": "Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` and `.gif`.",
+                                                                                "name": "imageFilename",
+                                                                                "type": "filename",
+                                                                                "label": "Image Filename",
+                                                                                "semantic": "file:name",
+                                                                                "extension": [
+                                                                                    "jpg",
+                                                                                    "jpeg",
+                                                                                    "png",
+                                                                                    "webp",
+                                                                                    "gif"
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "name": "imageData",
+                                                                                "type": "buffer",
+                                                                                "label": "Image Data",
+                                                                                "semantic": "file:data"
+                                                                            }
+                                                                        ],
+                                                                        "type": "collection",
+                                                                        "label": "Image"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "mappable": false
+                                                    },
+                                                    {
+                                                        "help": "Recommended value: `Auto`",
+                                                        "name": "imageDetail",
+                                                        "type": "select",
+                                                        "label": "Image Detail",
+                                                        "options": [
+                                                            {
+                                                                "label": "Auto",
+                                                                "value": "auto",
+                                                                "default": true
+                                                            },
+                                                            {
+                                                                "label": "High",
+                                                                "value": "high"
+                                                            },
+                                                            {
+                                                                "label": "Low",
+                                                                "value": "low"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "Assistant",
+                                                "value": "assistant",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    },
+                                                    {
+                                                        "mode": "edit",
+                                                        "name": "tool_calls",
+                                                        "spec": {
+                                                            "spec": [
+                                                                {
+                                                                    "name": "type",
+                                                                    "type": "hidden",
+                                                                    "default": "function"
+                                                                },
+                                                                {
+                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
+                                                                    "name": "id",
+                                                                    "type": "text",
+                                                                    "label": "Tool call ID"
+                                                                },
+                                                                {
+                                                                    "name": "function",
+                                                                    "spec": [
+                                                                        {
+                                                                            "help": "The name of the function previously called.",
+                                                                            "name": "name",
+                                                                            "type": "text",
+                                                                            "label": "Name",
+                                                                            "required": true
+                                                                        },
+                                                                        {
+                                                                            "help": "The arguments previously output by the AI.",
+                                                                            "name": "arguments",
+                                                                            "type": "text",
+                                                                            "label": "Arguments",
+                                                                            "required": true
+                                                                        }
+                                                                    ],
+                                                                    "type": "collection",
+                                                                    "label": "Function"
+                                                                }
+                                                            ],
+                                                            "type": "collection",
+                                                            "label": "Tool Call"
+                                                        },
+                                                        "type": "array",
+                                                        "label": "Tool Calls",
+                                                        "labels": {
+                                                            "add": "Add tool call"
+                                                        },
+                                                        "mappable": {
+                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "Developer / System",
+                                                "value": "system",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "Tool",
+                                                "value": "tool",
+                                                "nested": [
+                                                    {
+                                                        "help": "The return of the function. This role should only be used when you have processed a previous function call and want to send the output of the function execution back to the AI.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
+                                                        "name": "tool_call_id",
+                                                        "type": "text",
+                                                        "label": "Tool Call ID.",
+                                                        "required": true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "required": true
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Message"
+                        },
+                        "type": "array",
+                        "label": "Messages",
+                        "required": true
+                    },
+                    {
+                        "name": "response_format",
+                        "type": "select",
+                        "label": "Response Format",
+                        "validate": {
+                            "enum": [
+                                "text",
+                                "json_object"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "result",
+                        "type": "any",
+                        "label": "Result"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "object",
+                        "type": "text",
+                        "label": "Object"
+                    },
+                    {
+                        "name": "created",
+                        "type": "date",
+                        "label": "Created"
+                    },
+                    {
+                        "name": "model",
+                        "type": "text",
+                        "label": "Model"
+                    },
+                    {
+                        "name": "choices",
+                        "spec": [
+                            {
+                                "name": "text",
+                                "type": "text",
+                                "label": "Text"
+                            },
+                            {
+                                "name": "index",
+                                "type": "number",
+                                "label": "Index"
+                            },
+                            {
+                                "name": "logprobs",
+                                "type": "text",
+                                "label": "Log Probs"
+                            },
+                            {
+                                "name": "finish_reason",
+                                "type": "text",
+                                "label": "Finish Reason"
+                            },
+                            {
+                                "name": "message",
+                                "spec": [
+                                    {
+                                        "name": "role",
+                                        "type": "text",
+                                        "label": "Role"
+                                    },
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content"
+                                    },
+                                    {
+                                        "name": "tool_calls",
+                                        "spec": [
+                                            {
+                                                "name": "id",
+                                                "type": "text",
+                                                "label": "ID"
+                                            },
+                                            {
+                                                "name": "type",
+                                                "type": "text",
+                                                "label": "Type"
+                                            },
+                                            {
+                                                "name": "function",
+                                                "spec": [
+                                                    {
+                                                        "name": "name",
+                                                        "type": "text",
+                                                        "label": "Name"
+                                                    },
+                                                    {
+                                                        "name": "arguments",
+                                                        "type": "text",
+                                                        "label": "Arguments"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "Function"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Tool Calls"
+                                    },
+                                    {
+                                        "name": "refusal",
+                                        "type": "text",
+                                        "label": "Refusal"
+                                    },
+                                    {
+                                        "name": "annotations",
+                                        "spec": [
+                                            {
+                                                "name": "type",
+                                                "type": "text",
+                                                "label": "Type"
+                                            },
+                                            {
+                                                "name": "url_citation",
+                                                "spec": [
+                                                    {
+                                                        "name": "end_index",
+                                                        "type": "number",
+                                                        "label": "End Index"
+                                                    },
+                                                    {
+                                                        "name": "start_index",
+                                                        "type": "number",
+                                                        "label": "Start Index"
+                                                    },
+                                                    {
+                                                        "name": "title",
+                                                        "type": "text",
+                                                        "label": "Title"
+                                                    },
+                                                    {
+                                                        "name": "url",
+                                                        "type": "text",
+                                                        "label": "URL"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "URL Citation"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Annotations"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Message"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Choices"
+                    },
+                    {
+                        "name": "usage",
+                        "spec": [
+                            {
+                                "name": "prompt_tokens",
+                                "type": "number",
+                                "label": "Prompt Tokens"
+                            },
+                            {
+                                "name": "completion_tokens",
+                                "type": "text",
+                                "label": "Completion Tokens"
+                            },
+                            {
+                                "name": "total_tokens",
+                                "type": "number",
+                                "label": "Total Tokens"
+                            },
+                            {
+                                "name": "prompt_tokens_details",
+                                "spec": [
+                                    {
+                                        "name": "cached_tokens",
+                                        "type": "uinteger",
+                                        "label": "Cached Tokens"
+                                    },
+                                    {
+                                        "name": "text_tokens",
+                                        "type": "uinteger",
+                                        "label": "Text Tokens"
+                                    },
+                                    {
+                                        "name": "image_tokens",
+                                        "type": "uinteger",
+                                        "label": "Image Tokens"
+                                    },
+                                    {
+                                        "name": "audio_tokens",
+                                        "type": "uinteger",
+                                        "label": "Audio Tokens"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Prompt Tokens Details"
+                            },
+                            {
+                                "name": "completion_tokens_details",
+                                "spec": [
+                                    {
+                                        "name": "reasoning_tokens",
+                                        "type": "uinteger",
+                                        "label": "Reasoning Tokens"
+                                    },
+                                    {
+                                        "name": "text_tokens",
+                                        "type": "uinteger",
+                                        "label": "Text Tokens"
+                                    },
+                                    {
+                                        "name": "audio_tokens",
+                                        "type": "uinteger",
+                                        "label": "Audio Tokens"
+                                    },
+                                    {
+                                        "name": "accepted_prediction_tokens",
+                                        "type": "uinteger",
+                                        "label": "Accepted Prediction Tokens"
+                                    },
+                                    {
+                                        "name": "rejected_prediction_tokens",
+                                        "type": "uinteger",
+                                        "label": "Rejected Prediction Tokens"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Completion Tokens Details"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Usage"
+                    },
+                    {
+                        "name": "service_tier",
+                        "type": "text",
+                        "label": "Service Tier"
+                    },
+                    {
+                        "name": "system_fingerprint",
+                        "type": "text",
+                        "label": "System Fingerprint"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "sendinblue:CreateEmailCampaign",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 9426141
+            },
+            "mapper": {
+                "name": "Newsletter Created on {{formatDate(now; \"MMM D, YYYY h:mm A\")}}",
+                "sender": {
+                    "id": 1,
+                    "type": "list"
+                },
+                "subject": "Serrala Newsletter - {{formatDate(now; \"MMM D, YYYY\")}}",
+                "recipients": {
+                    "listIds": [
+                        5
+                    ]
+                },
+                "htmlContent": "{{5.result}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "Create the Email Campaign"
+                },
+                "restore": {
+                    "expect": {
+                        "params": {
+                            "mode": "chose"
+                        },
+                        "sender": {
+                            "nested": {
+                                "id": {
+                                    "mode": "chose",
+                                    "label": "airdrop.zones@gmail.com"
+                                },
+                                "type": {
+                                    "mode": "chose",
+                                    "label": "from list"
+                                }
+                            }
+                        },
+                        "abTesting": {
+                            "mode": "chose"
+                        },
+                        "recipients": {
+                            "nested": {
+                                "listIds": {
+                                    "mode": "chose",
+                                    "label": [
+                                        "List of Active Clients"
+                                    ]
+                                },
+                                "segmentIds": {
+                                    "mode": "chose"
+                                },
+                                "exclusionListIds": {
+                                    "mode": "chose"
+                                }
+                            }
+                        },
+                        "templateId": {
+                            "mode": "chose"
+                        },
+                        "mirrorActive": {
+                            "mode": "chose"
+                        },
+                        "ipWarmupEnable": {
+                            "mode": "chose"
+                        },
+                        "sendAtBestTime": {
+                            "mode": "chose"
+                        },
+                        "winnerCriteria": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "inlineImageActivation": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "sendinblue2"
+                            },
+                            "label": "lj brevo"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:sendinblue2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Name",
+                        "required": true
+                    },
+                    {
+                        "name": "sender",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "select",
+                                "label": "Select sender",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "list",
+                                        "email"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "id",
+                                "type": "select",
+                                "label": "Sender",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "htmlContent",
+                        "type": "text",
+                        "label": "HTML content"
+                    },
+                    {
+                        "name": "htmlUrl",
+                        "type": "url",
+                        "label": "HTML URL"
+                    },
+                    {
+                        "name": "templateId",
+                        "type": "select",
+                        "label": "Template"
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "tag",
+                        "type": "text",
+                        "label": "Tag"
+                    },
+                    {
+                        "name": "scheduledAt",
+                        "type": "date",
+                        "label": "Scheduled at"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "email",
+                        "label": "Reply To"
+                    },
+                    {
+                        "name": "toField",
+                        "type": "text",
+                        "label": "To field"
+                    },
+                    {
+                        "name": "recipients",
+                        "spec": [
+                            {
+                                "name": "exclusionListIds",
+                                "type": "select",
+                                "label": "Exclusion lists",
+                                "multiple": true
+                            },
+                            {
+                                "name": "listIds",
+                                "type": "select",
+                                "label": "Lists",
+                                "multiple": true
+                            },
+                            {
+                                "name": "segmentIds",
+                                "spec": {
+                                    "name": "value",
+                                    "type": "uinteger",
+                                    "label": "Segment ID"
+                                },
+                                "type": "array",
+                                "label": "Segment IDs"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Recipients"
+                    },
+                    {
+                        "name": "attachmentUrl",
+                        "type": "url",
+                        "label": "Attachment URL"
+                    },
+                    {
+                        "name": "inlineImageActivation",
+                        "type": "boolean",
+                        "label": "Inline image activation"
+                    },
+                    {
+                        "name": "mirrorActive",
+                        "type": "boolean",
+                        "label": "Mirror active"
+                    },
+                    {
+                        "name": "header",
+                        "type": "text",
+                        "label": "Header"
+                    },
+                    {
+                        "name": "footer",
+                        "type": "text",
+                        "label": "Footer"
+                    },
+                    {
+                        "name": "utmCampaign",
+                        "type": "text",
+                        "label": "UTM campaign"
+                    },
+                    {
+                        "name": "params",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Params"
+                    },
+                    {
+                        "name": "sendAtBestTime",
+                        "type": "boolean",
+                        "label": "Send at best time"
+                    },
+                    {
+                        "name": "abTesting",
+                        "type": "boolean",
+                        "label": "A/B testing"
+                    },
+                    {
+                        "name": "subjectA",
+                        "type": "text",
+                        "label": "Subject A"
+                    },
+                    {
+                        "name": "subjectB",
+                        "type": "text",
+                        "label": "Subject B"
+                    },
+                    {
+                        "name": "splitRule",
+                        "type": "number",
+                        "label": "Split rule"
+                    },
+                    {
+                        "name": "winnerCriteria",
+                        "type": "select",
+                        "label": "Winner criteria",
+                        "validate": {
+                            "enum": [
+                                "open",
+                                "click"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "winnerDelay",
+                        "type": "number",
+                        "label": "Winner delay"
+                    },
+                    {
+                        "name": "ipWarmupEnable",
+                        "type": "boolean",
+                        "label": "IP warmup enable"
+                    },
+                    {
+                        "name": "initialQuota",
+                        "type": "number",
+                        "label": "Initial quota"
+                    },
+                    {
+                        "name": "increaseRate",
+                        "type": "number",
+                        "label": "Increase rate"
+                    },
+                    {
+                        "name": "unsubscriptionPageId",
+                        "type": "text",
+                        "label": "Unsubscription Page ID"
+                    },
+                    {
+                        "name": "updateFormId",
+                        "type": "text",
+                        "label": "Update Form ID"
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Name",
+                        "required": true
+                    },
+                    {
+                        "name": "sender",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "select",
+                                "label": "Select sender",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "list",
+                                        "email"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "id",
+                                "type": "select",
+                                "label": "Sender",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "htmlContent",
+                        "type": "text",
+                        "label": "HTML content"
+                    },
+                    {
+                        "name": "htmlUrl",
+                        "type": "url",
+                        "label": "HTML URL"
+                    },
+                    {
+                        "name": "templateId",
+                        "type": "select",
+                        "label": "Template"
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "tag",
+                        "type": "text",
+                        "label": "Tag"
+                    },
+                    {
+                        "name": "scheduledAt",
+                        "type": "date",
+                        "label": "Scheduled at"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "email",
+                        "label": "Reply To"
+                    },
+                    {
+                        "name": "toField",
+                        "type": "text",
+                        "label": "To field"
+                    },
+                    {
+                        "name": "recipients",
+                        "spec": [
+                            {
+                                "name": "exclusionListIds",
+                                "type": "select",
+                                "label": "Exclusion lists",
+                                "multiple": true
+                            },
+                            {
+                                "name": "listIds",
+                                "type": "select",
+                                "label": "Lists",
+                                "multiple": true
+                            },
+                            {
+                                "name": "segmentIds",
+                                "spec": {
+                                    "name": "value",
+                                    "type": "uinteger",
+                                    "label": "Segment ID"
+                                },
+                                "type": "array",
+                                "label": "Segment IDs"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Recipients"
+                    },
+                    {
+                        "name": "attachmentUrl",
+                        "type": "url",
+                        "label": "Attachment URL"
+                    },
+                    {
+                        "name": "inlineImageActivation",
+                        "type": "boolean",
+                        "label": "Inline image activation"
+                    },
+                    {
+                        "name": "mirrorActive",
+                        "type": "boolean",
+                        "label": "Mirror active"
+                    },
+                    {
+                        "name": "header",
+                        "type": "text",
+                        "label": "Header"
+                    },
+                    {
+                        "name": "footer",
+                        "type": "text",
+                        "label": "Footer"
+                    },
+                    {
+                        "name": "utmCampaign",
+                        "type": "text",
+                        "label": "UTM campaign"
+                    },
+                    {
+                        "name": "params",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Params"
+                    },
+                    {
+                        "name": "sendAtBestTime",
+                        "type": "boolean",
+                        "label": "Send at best time"
+                    },
+                    {
+                        "name": "abTesting",
+                        "type": "boolean",
+                        "label": "A/B testing"
+                    },
+                    {
+                        "name": "subjectA",
+                        "type": "text",
+                        "label": "Subject A"
+                    },
+                    {
+                        "name": "subjectB",
+                        "type": "text",
+                        "label": "Subject B"
+                    },
+                    {
+                        "name": "splitRule",
+                        "type": "number",
+                        "label": "Split rule"
+                    },
+                    {
+                        "name": "winnerCriteria",
+                        "type": "select",
+                        "label": "Winner criteria",
+                        "validate": {
+                            "enum": [
+                                "open",
+                                "click"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "winnerDelay",
+                        "type": "number",
+                        "label": "Winner delay"
+                    },
+                    {
+                        "name": "ipWarmupEnable",
+                        "type": "boolean",
+                        "label": "IP warmup enable"
+                    },
+                    {
+                        "name": "initialQuota",
+                        "type": "number",
+                        "label": "Initial quota"
+                    },
+                    {
+                        "name": "increaseRate",
+                        "type": "number",
+                        "label": "Increase rate"
+                    },
+                    {
+                        "name": "unsubscriptionPageId",
+                        "type": "text",
+                        "label": "Unsubscription Page ID"
+                    },
+                    {
+                        "name": "updateFormId",
+                        "type": "text",
+                        "label": "Update Form ID"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 7,
+            "module": "sendinblue:SendEmail",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 9426141
+            },
+            "mapper": {
+                "to": [
+                    {
+                        "name": "airdrop.zones@gmail.com",
+                        "email": "airdrop.zones@gmail.com"
+                    }
+                ],
+                "sender": {
+                    "name": "airdrop.zones@gmail.com",
+                    "email": "airdrop.zones@gmail.com"
+                },
+                "replyTo": {
+                    "name": "airdrop.zones@gmail.com",
+                    "email": "airdrop.zones@gmail.com"
+                },
+                "subject": "TEST Newsletter for {{formatDate(now; \"MMM D, YYYY h:mm A\")}}",
+                "htmlContent": "{{5.result}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0,
+                    "name": "Test Email to Me"
+                },
+                "restore": {
+                    "expect": {
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "to": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "tags": {
+                            "mode": "chose"
+                        },
+                        "params": {
+                            "mode": "chose"
+                        },
+                        "headers": {
+                            "mode": "chose"
+                        },
+                        "attachment": {
+                            "mode": "chose"
+                        },
+                        "templateId": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "sendinblue2"
+                            },
+                            "label": "lj brevo"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:sendinblue2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "templateId",
+                        "type": "select",
+                        "label": "Template"
+                    },
+                    {
+                        "name": "to",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "To",
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "htmlContent",
+                        "type": "text",
+                        "label": "HTML body"
+                    },
+                    {
+                        "name": "textContent",
+                        "type": "text",
+                        "label": "Text body"
+                    },
+                    {
+                        "name": "replyTo",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Reply To",
+                        "required": true
+                    },
+                    {
+                        "name": "attachment",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "select",
+                                "label": "Type",
+                                "options": [
+                                    {
+                                        "label": "URL",
+                                        "value": "url",
+                                        "nested": [
+                                            {
+                                                "name": "fileName",
+                                                "type": "filename",
+                                                "label": "File name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "url",
+                                                "type": "url",
+                                                "label": "Image URL",
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Data",
+                                        "value": "data",
+                                        "nested": [
+                                            {
+                                                "name": "fileName",
+                                                "type": "filename",
+                                                "label": "File name",
+                                                "required": true,
+                                                "semantic": "file:name"
+                                            },
+                                            {
+                                                "name": "data",
+                                                "type": "buffer",
+                                                "label": "Data",
+                                                "required": true,
+                                                "semantic": "file:data"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments"
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "BCC"
+                    },
+                    {
+                        "name": "cc",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "CC"
+                    },
+                    {
+                        "name": "sender",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "tags",
+                        "spec": {
+                            "name": "value",
+                            "type": "text"
+                        },
+                        "type": "array",
+                        "label": "Tags"
+                    },
+                    {
+                        "name": "params",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Params"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 8,
+            "module": "google-sheets:updateRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 8131829
+            },
+            "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                    "3": "sent",
+                    "7": "{{6.id}}"
+                },
+                "sheetId": "Newsletter Drafts",
+                "rowNumber": "{{3.`__ROW_NUMBER__`}}",
+                "spreadsheetId": "/14Q2Fd_dYPi06HPuT6hLnbymzKU-cKiER3gJlfibhzwc",
+                "includesHeaders": true,
+                "valueInputOption": "USER_ENTERED"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0,
+                    "name": "Update Status \"sent\" and Campaign ID"
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "My Drive"
+                        },
+                        "mode": {
+                            "label": "Search by path"
+                        },
+                        "sheetId": {
+                            "label": "Newsletter Drafts"
+                        },
+                        "spreadsheetId": {
+                            "path": [
+                                "Newsletter Process Flow Database"
+                            ]
+                        },
+                        "includesHeaders": {
+                            "label": "Yes",
+                            "nested": [
+                                {
+                                    "name": "values",
+                                    "spec": [
+                                        {
+                                            "name": "0",
+                                            "type": "text",
+                                            "label": "Newsletter Draft Created (A)"
+                                        },
+                                        {
+                                            "name": "1",
+                                            "type": "text",
+                                            "label": "Google Doc Link (B)"
+                                        },
+                                        {
+                                            "name": "2",
+                                            "type": "text",
+                                            "label": "Push a Test Email? (C)"
+                                        },
+                                        {
+                                            "name": "3",
+                                            "type": "text",
+                                            "label": "Test Email Status (D)"
+                                        },
+                                        {
+                                            "name": "4",
+                                            "type": "text",
+                                            "label": "Send Final Newsletter to Brevo List (E)"
+                                        },
+                                        {
+                                            "name": "5",
+                                            "type": "text",
+                                            "label": "Date Newsletter Sent (F)"
+                                        },
+                                        {
+                                            "name": "6",
+                                            "type": "text",
+                                            "label": "Document ID (G)"
+                                        },
+                                        {
+                                            "name": "7",
+                                            "type": "text",
+                                            "label": "Newsletter Campaign ID (H)"
+                                        },
+                                        {
+                                            "name": "8",
+                                            "type": "text",
+                                            "label": "(I)"
+                                        },
+                                        {
+                                            "name": "9",
+                                            "type": "text",
+                                            "label": "(J)"
+                                        },
+                                        {
+                                            "name": "10",
+                                            "type": "text",
+                                            "label": "(K)"
+                                        },
+                                        {
+                                            "name": "11",
+                                            "type": "text",
+                                            "label": "(L)"
+                                        },
+                                        {
+                                            "name": "12",
+                                            "type": "text",
+                                            "label": "(M)"
+                                        },
+                                        {
+                                            "name": "13",
+                                            "type": "text",
+                                            "label": "(N)"
+                                        },
+                                        {
+                                            "name": "14",
+                                            "type": "text",
+                                            "label": "(O)"
+                                        },
+                                        {
+                                            "name": "15",
+                                            "type": "text",
+                                            "label": "(P)"
+                                        },
+                                        {
+                                            "name": "16",
+                                            "type": "text",
+                                            "label": "(Q)"
+                                        },
+                                        {
+                                            "name": "17",
+                                            "type": "text",
+                                            "label": "(R)"
+                                        },
+                                        {
+                                            "name": "18",
+                                            "type": "text",
+                                            "label": "(S)"
+                                        },
+                                        {
+                                            "name": "19",
+                                            "type": "text",
+                                            "label": "(T)"
+                                        },
+                                        {
+                                            "name": "20",
+                                            "type": "text",
+                                            "label": "(U)"
+                                        },
+                                        {
+                                            "name": "21",
+                                            "type": "text",
+                                            "label": "(V)"
+                                        },
+                                        {
+                                            "name": "22",
+                                            "type": "text",
+                                            "label": "(W)"
+                                        },
+                                        {
+                                            "name": "23",
+                                            "type": "text",
+                                            "label": "(X)"
+                                        },
+                                        {
+                                            "name": "24",
+                                            "type": "text",
+                                            "label": "(Y)"
+                                        },
+                                        {
+                                            "name": "25",
+                                            "type": "text",
+                                            "label": "(Z)"
+                                        },
+                                        {
+                                            "name": "26",
+                                            "type": "text",
+                                            "label": "(AA)"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Values"
+                                }
+                            ]
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "Lem Sheets Test (airdrop.zones@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "select",
+                                "fromAll",
+                                "map"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option",
+                        "validate": {
+                            "enum": [
+                                "USER_ENTERED",
+                                "RAW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "file",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "rowNumber",
+                        "type": "uinteger",
+                        "label": "Row number",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "values",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "Newsletter Draft Created (A)"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "Google Doc Link (B)"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "Push a Test Email? (C)"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "Test Email Status (D)"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "Send Final Newsletter to Brevo List (E)"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "Date Newsletter Sent (F)"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "Document ID (G)"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "Newsletter Campaign ID (H)"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "(I)"
+                            },
+                            {
+                                "name": "9",
+                                "type": "text",
+                                "label": "(J)"
+                            },
+                            {
+                                "name": "10",
+                                "type": "text",
+                                "label": "(K)"
+                            },
+                            {
+                                "name": "11",
+                                "type": "text",
+                                "label": "(L)"
+                            },
+                            {
+                                "name": "12",
+                                "type": "text",
+                                "label": "(M)"
+                            },
+                            {
+                                "name": "13",
+                                "type": "text",
+                                "label": "(N)"
+                            },
+                            {
+                                "name": "14",
+                                "type": "text",
+                                "label": "(O)"
+                            },
+                            {
+                                "name": "15",
+                                "type": "text",
+                                "label": "(P)"
+                            },
+                            {
+                                "name": "16",
+                                "type": "text",
+                                "label": "(Q)"
+                            },
+                            {
+                                "name": "17",
+                                "type": "text",
+                                "label": "(R)"
+                            },
+                            {
+                                "name": "18",
+                                "type": "text",
+                                "label": "(S)"
+                            },
+                            {
+                                "name": "19",
+                                "type": "text",
+                                "label": "(T)"
+                            },
+                            {
+                                "name": "20",
+                                "type": "text",
+                                "label": "(U)"
+                            },
+                            {
+                                "name": "21",
+                                "type": "text",
+                                "label": "(V)"
+                            },
+                            {
+                                "name": "22",
+                                "type": "text",
+                                "label": "(W)"
+                            },
+                            {
+                                "name": "23",
+                                "type": "text",
+                                "label": "(X)"
+                            },
+                            {
+                                "name": "24",
+                                "type": "text",
+                                "label": "(Y)"
+                            },
+                            {
+                                "name": "25",
+                                "type": "text",
+                                "label": "(Z)"
+                            },
+                            {
+                                "name": "26",
+                                "type": "text",
+                                "label": "(AA)"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Values"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
+    }
+}

@@ -1,0 +1,222 @@
+{
+    "name": "Custom Gpt Interface",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 2803830,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "Receive Query from Custom GPT"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "custom gpt hook"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "ai-agent:RunAnAIAgent",
+            "version": 0,
+            "parameters": {},
+            "mapper": {
+                "agent": "c09f8659-1623-48e1-ad12-49ae1ed19ed4",
+                "isAsync": false,
+                "timeout": "",
+                "messages": [
+                    "{{1.message}}"
+                ],
+                "threadID": "1",
+                "scenarios": [],
+                "additionalSystemPrompt": ""
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "Call Assistant"
+                },
+                "restore": {
+                    "expect": {
+                        "agent": {
+                            "label": "Test Assistant",
+                            "nested": []
+                        },
+                        "messages": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "agent",
+                        "type": "aiagent",
+                        "label": "Agent",
+                        "required": true
+                    },
+                    {
+                        "name": "scenarios",
+                        "type": "scenariolist",
+                        "label": "Additional tools"
+                    },
+                    {
+                        "name": "threadID",
+                        "type": "text",
+                        "label": "Thread ID"
+                    },
+                    {
+                        "name": "additionalSystemPrompt",
+                        "type": "text",
+                        "label": "Additional system instructions"
+                    },
+                    {
+                        "name": "messages",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Message"
+                        },
+                        "type": "array",
+                        "label": "Messages"
+                    },
+                    {
+                        "name": "timeout",
+                        "type": "number",
+                        "label": "Timeout",
+                        "validate": {
+                            "max": 600,
+                            "min": 120
+                        }
+                    },
+                    {
+                        "name": "isAsync",
+                        "type": "boolean",
+                        "label": "Continue scenario run while agent is working",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 3,
+            "module": "gateway:WebhookRespond",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "body": "{{2.response}}",
+                "status": "200",
+                "headers": []
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "Send Response to Custom GPT"
+                },
+                "restore": {
+                    "expect": {
+                        "headers": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "status",
+                        "type": "uinteger",
+                        "label": "Status",
+                        "required": true,
+                        "validate": {
+                            "min": 100
+                        }
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                    "max": 256
+                                }
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                    "max": 4096
+                                }
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Custom headers",
+                        "validate": {
+                            "maxItems": 16
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
+    }
+}

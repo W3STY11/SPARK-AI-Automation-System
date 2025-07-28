@@ -1,0 +1,2158 @@
+{
+    "name": "3. LinkedIn Content System: Trigger from \"Ready to post?\" -> Move File -> Create LinkedIn Post",
+    "flow": [
+        {
+            "id": 13,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 1110240,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 450,
+                    "name": "Trigger from \"Ready to Post\" column"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "trigger test"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1,
+            "module": "google-sheets:filterRows",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2174431
+            },
+            "mapper": {
+                "from": "drive",
+                "filter": [
+                    [
+                        {
+                            "a": "G",
+                            "b": "TRUE",
+                            "o": "text:equal"
+                        },
+                        {
+                            "a": "H",
+                            "b": "Processed",
+                            "o": "text:notcontain:ci"
+                        }
+                    ]
+                ],
+                "sheetId": "Blog Tracker",
+                "sortOrder": "asc",
+                "spreadsheetId": "1686x6554-BCkBhNMgRGLaTeelFWyTkZuOHy6dW40OWg",
+                "tableFirstRow": "A1:CZ1",
+                "includesHeaders": true,
+                "valueRenderOption": "FORMATTED_VALUE",
+                "dateTimeRenderOption": "FORMATTED_STRING"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 450,
+                    "name": "Checks \"Ready to Post?\""
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "Select from My Drive"
+                        },
+                        "orderBy": {
+                            "mode": "chose"
+                        },
+                        "sheetId": {
+                            "mode": "chose",
+                            "label": "Blog Tracker"
+                        },
+                        "sortOrder": {
+                            "mode": "chose",
+                            "label": "Ascending"
+                        },
+                        "spreadsheetId": {
+                            "mode": "chose",
+                            "label": "Peter W. - Content System"
+                        },
+                        "tableFirstRow": {
+                            "label": "A-CZ"
+                        },
+                        "includesHeaders": {
+                            "mode": "chose",
+                            "label": "Yes"
+                        },
+                        "valueRenderOption": {
+                            "mode": "chose",
+                            "label": "Formatted value"
+                        },
+                        "dateTimeRenderOption": {
+                            "mode": "chose",
+                            "label": "Formatted string"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "My Google connection (ljquimpo1992@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "valueRenderOption",
+                        "type": "select",
+                        "label": "Value render option",
+                        "validate": {
+                            "enum": [
+                                "FORMATTED_VALUE",
+                                "UNFORMATTED_VALUE",
+                                "FORMULA"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "dateTimeRenderOption",
+                        "type": "select",
+                        "label": "Date and time render option",
+                        "validate": {
+                            "enum": [
+                                "SERIAL_NUMBER",
+                                "FORMATTED_STRING"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "select",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tableFirstRow",
+                        "type": "select",
+                        "label": "Column range",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "A1:Z1",
+                                "A1:BZ1",
+                                "A1:CZ1",
+                                "A1:DZ1",
+                                "A1:MZ1",
+                                "A1:ZZ1",
+                                "A1:AZZ1",
+                                "A1:BZZ1",
+                                "A1:CZZ1",
+                                "A1:DZZ1",
+                                "A1:MZZ1",
+                                "A1:ZZZ1"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "type": "filter",
+                        "label": "Filter",
+                        "options": "rpc://google-sheets/2/rpcGetFilterKeys?includesHeaders=true"
+                    },
+                    {
+                        "name": "orderBy",
+                        "type": "select",
+                        "label": "Order by"
+                    },
+                    {
+                        "name": "sortOrder",
+                        "type": "select",
+                        "label": "Sort order",
+                        "validate": {
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__IMTLENGTH__",
+                        "type": "uinteger",
+                        "label": "Total number of bundles"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "type": "uinteger",
+                        "label": "Bundle order position"
+                    },
+                    {
+                        "name": "__ROW_NUMBER__",
+                        "type": "number",
+                        "label": "Row number"
+                    },
+                    {
+                        "name": "__SPREADSHEET_ID__",
+                        "type": "text",
+                        "label": "Spreadsheet ID"
+                    },
+                    {
+                        "name": "__SHEET__",
+                        "type": "text",
+                        "label": "Sheet"
+                    },
+                    {
+                        "name": "0",
+                        "type": "text",
+                        "label": "Google Doc Title (A)"
+                    },
+                    {
+                        "name": "1",
+                        "type": "text",
+                        "label": "Google Doc Link (B)"
+                    },
+                    {
+                        "name": "2",
+                        "type": "text",
+                        "label": "Document ID (C)"
+                    },
+                    {
+                        "name": "3",
+                        "type": "text",
+                        "label": "Google Drive File ID (D)"
+                    },
+                    {
+                        "name": "4",
+                        "type": "text",
+                        "label": "URL (E)"
+                    },
+                    {
+                        "name": "5",
+                        "type": "text",
+                        "label": "Date Created (F)"
+                    },
+                    {
+                        "name": "6",
+                        "type": "text",
+                        "label": "Ready To Post? (G)"
+                    },
+                    {
+                        "name": "7",
+                        "type": "text",
+                        "label": "Status (H)"
+                    },
+                    {
+                        "name": "8",
+                        "type": "text",
+                        "label": "Team Member (I)"
+                    },
+                    {
+                        "name": "9",
+                        "type": "text",
+                        "label": "(J)"
+                    },
+                    {
+                        "name": "10",
+                        "type": "text",
+                        "label": "(K)"
+                    },
+                    {
+                        "name": "11",
+                        "type": "text",
+                        "label": "(L)"
+                    },
+                    {
+                        "name": "12",
+                        "type": "text",
+                        "label": "(M)"
+                    },
+                    {
+                        "name": "13",
+                        "type": "text",
+                        "label": "(N)"
+                    },
+                    {
+                        "name": "14",
+                        "type": "text",
+                        "label": "(O)"
+                    },
+                    {
+                        "name": "15",
+                        "type": "text",
+                        "label": "(P)"
+                    },
+                    {
+                        "name": "16",
+                        "type": "text",
+                        "label": "(Q)"
+                    },
+                    {
+                        "name": "17",
+                        "type": "text",
+                        "label": "(R)"
+                    },
+                    {
+                        "name": "18",
+                        "type": "text",
+                        "label": "(S)"
+                    },
+                    {
+                        "name": "19",
+                        "type": "text",
+                        "label": "(T)"
+                    },
+                    {
+                        "name": "20",
+                        "type": "text",
+                        "label": "(U)"
+                    },
+                    {
+                        "name": "21",
+                        "type": "text",
+                        "label": "(V)"
+                    },
+                    {
+                        "name": "22",
+                        "type": "text",
+                        "label": "(W)"
+                    },
+                    {
+                        "name": "23",
+                        "type": "text",
+                        "label": "(X)"
+                    },
+                    {
+                        "name": "24",
+                        "type": "text",
+                        "label": "(Y)"
+                    },
+                    {
+                        "name": "25",
+                        "type": "text",
+                        "label": "(Z)"
+                    },
+                    {
+                        "name": "26",
+                        "type": "text",
+                        "label": "(AA)"
+                    },
+                    {
+                        "name": "27",
+                        "type": "text",
+                        "label": "(AB)"
+                    },
+                    {
+                        "name": "28",
+                        "type": "text",
+                        "label": "(AC)"
+                    },
+                    {
+                        "name": "29",
+                        "type": "text",
+                        "label": "(AD)"
+                    },
+                    {
+                        "name": "30",
+                        "type": "text",
+                        "label": "(AE)"
+                    },
+                    {
+                        "name": "31",
+                        "type": "text",
+                        "label": "(AF)"
+                    },
+                    {
+                        "name": "32",
+                        "type": "text",
+                        "label": "(AG)"
+                    },
+                    {
+                        "name": "33",
+                        "type": "text",
+                        "label": "(AH)"
+                    },
+                    {
+                        "name": "34",
+                        "type": "text",
+                        "label": "(AI)"
+                    },
+                    {
+                        "name": "35",
+                        "type": "text",
+                        "label": "(AJ)"
+                    },
+                    {
+                        "name": "36",
+                        "type": "text",
+                        "label": "(AK)"
+                    },
+                    {
+                        "name": "37",
+                        "type": "text",
+                        "label": "(AL)"
+                    },
+                    {
+                        "name": "38",
+                        "type": "text",
+                        "label": "(AM)"
+                    },
+                    {
+                        "name": "39",
+                        "type": "text",
+                        "label": "(AN)"
+                    },
+                    {
+                        "name": "40",
+                        "type": "text",
+                        "label": "(AO)"
+                    },
+                    {
+                        "name": "41",
+                        "type": "text",
+                        "label": "(AP)"
+                    },
+                    {
+                        "name": "42",
+                        "type": "text",
+                        "label": "(AQ)"
+                    },
+                    {
+                        "name": "43",
+                        "type": "text",
+                        "label": "(AR)"
+                    },
+                    {
+                        "name": "44",
+                        "type": "text",
+                        "label": "(AS)"
+                    },
+                    {
+                        "name": "45",
+                        "type": "text",
+                        "label": "(AT)"
+                    },
+                    {
+                        "name": "46",
+                        "type": "text",
+                        "label": "(AU)"
+                    },
+                    {
+                        "name": "47",
+                        "type": "text",
+                        "label": "(AV)"
+                    },
+                    {
+                        "name": "48",
+                        "type": "text",
+                        "label": "(AW)"
+                    },
+                    {
+                        "name": "49",
+                        "type": "text",
+                        "label": "(AX)"
+                    },
+                    {
+                        "name": "50",
+                        "type": "text",
+                        "label": "(AY)"
+                    },
+                    {
+                        "name": "51",
+                        "type": "text",
+                        "label": "(AZ)"
+                    },
+                    {
+                        "name": "52",
+                        "type": "text",
+                        "label": "(BA)"
+                    },
+                    {
+                        "name": "53",
+                        "type": "text",
+                        "label": "(BB)"
+                    },
+                    {
+                        "name": "54",
+                        "type": "text",
+                        "label": "(BC)"
+                    },
+                    {
+                        "name": "55",
+                        "type": "text",
+                        "label": "(BD)"
+                    },
+                    {
+                        "name": "56",
+                        "type": "text",
+                        "label": "(BE)"
+                    },
+                    {
+                        "name": "57",
+                        "type": "text",
+                        "label": "(BF)"
+                    },
+                    {
+                        "name": "58",
+                        "type": "text",
+                        "label": "(BG)"
+                    },
+                    {
+                        "name": "59",
+                        "type": "text",
+                        "label": "(BH)"
+                    },
+                    {
+                        "name": "60",
+                        "type": "text",
+                        "label": "(BI)"
+                    },
+                    {
+                        "name": "61",
+                        "type": "text",
+                        "label": "(BJ)"
+                    },
+                    {
+                        "name": "62",
+                        "type": "text",
+                        "label": "(BK)"
+                    },
+                    {
+                        "name": "63",
+                        "type": "text",
+                        "label": "(BL)"
+                    },
+                    {
+                        "name": "64",
+                        "type": "text",
+                        "label": "(BM)"
+                    },
+                    {
+                        "name": "65",
+                        "type": "text",
+                        "label": "(BN)"
+                    },
+                    {
+                        "name": "66",
+                        "type": "text",
+                        "label": "(BO)"
+                    },
+                    {
+                        "name": "67",
+                        "type": "text",
+                        "label": "(BP)"
+                    },
+                    {
+                        "name": "68",
+                        "type": "text",
+                        "label": "(BQ)"
+                    },
+                    {
+                        "name": "69",
+                        "type": "text",
+                        "label": "(BR)"
+                    },
+                    {
+                        "name": "70",
+                        "type": "text",
+                        "label": "(BS)"
+                    },
+                    {
+                        "name": "71",
+                        "type": "text",
+                        "label": "(BT)"
+                    },
+                    {
+                        "name": "72",
+                        "type": "text",
+                        "label": "(BU)"
+                    },
+                    {
+                        "name": "73",
+                        "type": "text",
+                        "label": "(BV)"
+                    },
+                    {
+                        "name": "74",
+                        "type": "text",
+                        "label": "(BW)"
+                    },
+                    {
+                        "name": "75",
+                        "type": "text",
+                        "label": "(BX)"
+                    },
+                    {
+                        "name": "76",
+                        "type": "text",
+                        "label": "(BY)"
+                    },
+                    {
+                        "name": "77",
+                        "type": "text",
+                        "label": "(BZ)"
+                    },
+                    {
+                        "name": "78",
+                        "type": "text",
+                        "label": "(CA)"
+                    },
+                    {
+                        "name": "79",
+                        "type": "text",
+                        "label": "(CB)"
+                    },
+                    {
+                        "name": "80",
+                        "type": "text",
+                        "label": "(CC)"
+                    },
+                    {
+                        "name": "81",
+                        "type": "text",
+                        "label": "(CD)"
+                    },
+                    {
+                        "name": "82",
+                        "type": "text",
+                        "label": "(CE)"
+                    },
+                    {
+                        "name": "83",
+                        "type": "text",
+                        "label": "(CF)"
+                    },
+                    {
+                        "name": "84",
+                        "type": "text",
+                        "label": "(CG)"
+                    },
+                    {
+                        "name": "85",
+                        "type": "text",
+                        "label": "(CH)"
+                    },
+                    {
+                        "name": "86",
+                        "type": "text",
+                        "label": "(CI)"
+                    },
+                    {
+                        "name": "87",
+                        "type": "text",
+                        "label": "(CJ)"
+                    },
+                    {
+                        "name": "88",
+                        "type": "text",
+                        "label": "(CK)"
+                    },
+                    {
+                        "name": "89",
+                        "type": "text",
+                        "label": "(CL)"
+                    },
+                    {
+                        "name": "90",
+                        "type": "text",
+                        "label": "(CM)"
+                    },
+                    {
+                        "name": "91",
+                        "type": "text",
+                        "label": "(CN)"
+                    },
+                    {
+                        "name": "92",
+                        "type": "text",
+                        "label": "(CO)"
+                    },
+                    {
+                        "name": "93",
+                        "type": "text",
+                        "label": "(CP)"
+                    },
+                    {
+                        "name": "94",
+                        "type": "text",
+                        "label": "(CQ)"
+                    },
+                    {
+                        "name": "95",
+                        "type": "text",
+                        "label": "(CR)"
+                    },
+                    {
+                        "name": "96",
+                        "type": "text",
+                        "label": "(CS)"
+                    },
+                    {
+                        "name": "97",
+                        "type": "text",
+                        "label": "(CT)"
+                    },
+                    {
+                        "name": "98",
+                        "type": "text",
+                        "label": "(CU)"
+                    },
+                    {
+                        "name": "99",
+                        "type": "text",
+                        "label": "(CV)"
+                    },
+                    {
+                        "name": "100",
+                        "type": "text",
+                        "label": "(CW)"
+                    },
+                    {
+                        "name": "101",
+                        "type": "text",
+                        "label": "(CX)"
+                    },
+                    {
+                        "name": "102",
+                        "type": "text",
+                        "label": "(CY)"
+                    },
+                    {
+                        "name": "103",
+                        "type": "text",
+                        "label": "(CZ)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "google-drive:moveAFileIntoAFolder",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 2311909
+            },
+            "mapper": {
+                "file": "{{1.`2`}}",
+                "move": "drive",
+                "select": "file",
+                "folderId": "/1MIgSJC6r7P9Obz2nvzAcTWhOIGLlFUvu",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 450,
+                    "name": "Move File to \"Completed\""
+                },
+                "restore": {
+                    "expect": {
+                        "file": {
+                            "mode": "edit",
+                            "path": []
+                        },
+                        "move": {
+                            "label": "My Drive"
+                        },
+                        "select": {
+                            "label": "File"
+                        },
+                        "folderId": {
+                            "mode": "chose",
+                            "path": [
+                                "TEST Completed (Peter W.)"
+                            ]
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "ljquimpo1992@gmail.com (ljquimpo1992@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "move",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select File/Folder",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "file",
+                                "folder"
+                            ]
+                        }
+                    },
+                    {
+                        "mode": "edit",
+                        "name": "file",
+                        "type": "file",
+                        "label": "File ID",
+                        "required": true
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "google-sheets:updateRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2174431
+            },
+            "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                    "7": "Processed"
+                },
+                "sheetId": "Blog Tracker",
+                "rowNumber": "{{1.`__ROW_NUMBER__`}}",
+                "spreadsheetId": "/1686x6554-BCkBhNMgRGLaTeelFWyTkZuOHy6dW40OWg",
+                "includesHeaders": true,
+                "valueInputOption": "USER_ENTERED"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 450,
+                    "name": "Update Status to \"Processed\""
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "My Drive"
+                        },
+                        "mode": {
+                            "label": "Search by path"
+                        },
+                        "sheetId": {
+                            "label": "Blog Tracker"
+                        },
+                        "spreadsheetId": {
+                            "path": [
+                                "Peter W. - Content System"
+                            ]
+                        },
+                        "includesHeaders": {
+                            "label": "Yes",
+                            "nested": [
+                                {
+                                    "name": "values",
+                                    "spec": [
+                                        {
+                                            "name": "0",
+                                            "type": "text",
+                                            "label": "Google Doc Title (A)"
+                                        },
+                                        {
+                                            "name": "1",
+                                            "type": "text",
+                                            "label": "Google Doc Link (B)"
+                                        },
+                                        {
+                                            "name": "2",
+                                            "type": "text",
+                                            "label": "Document ID (C)"
+                                        },
+                                        {
+                                            "name": "3",
+                                            "type": "text",
+                                            "label": "Google Drive File ID (D)"
+                                        },
+                                        {
+                                            "name": "4",
+                                            "type": "text",
+                                            "label": "URL (E)"
+                                        },
+                                        {
+                                            "name": "5",
+                                            "type": "text",
+                                            "label": "Date Created (F)"
+                                        },
+                                        {
+                                            "name": "6",
+                                            "type": "text",
+                                            "label": "Ready for Processing? (G)"
+                                        },
+                                        {
+                                            "name": "7",
+                                            "type": "text",
+                                            "label": "Status (H)"
+                                        },
+                                        {
+                                            "name": "8",
+                                            "type": "text",
+                                            "label": "(I)"
+                                        },
+                                        {
+                                            "name": "9",
+                                            "type": "text",
+                                            "label": "(J)"
+                                        },
+                                        {
+                                            "name": "10",
+                                            "type": "text",
+                                            "label": "(K)"
+                                        },
+                                        {
+                                            "name": "11",
+                                            "type": "text",
+                                            "label": "(L)"
+                                        },
+                                        {
+                                            "name": "12",
+                                            "type": "text",
+                                            "label": "(M)"
+                                        },
+                                        {
+                                            "name": "13",
+                                            "type": "text",
+                                            "label": "(N)"
+                                        },
+                                        {
+                                            "name": "14",
+                                            "type": "text",
+                                            "label": "(O)"
+                                        },
+                                        {
+                                            "name": "15",
+                                            "type": "text",
+                                            "label": "(P)"
+                                        },
+                                        {
+                                            "name": "16",
+                                            "type": "text",
+                                            "label": "(Q)"
+                                        },
+                                        {
+                                            "name": "17",
+                                            "type": "text",
+                                            "label": "(R)"
+                                        },
+                                        {
+                                            "name": "18",
+                                            "type": "text",
+                                            "label": "(S)"
+                                        },
+                                        {
+                                            "name": "19",
+                                            "type": "text",
+                                            "label": "(T)"
+                                        },
+                                        {
+                                            "name": "20",
+                                            "type": "text",
+                                            "label": "(U)"
+                                        },
+                                        {
+                                            "name": "21",
+                                            "type": "text",
+                                            "label": "(V)"
+                                        },
+                                        {
+                                            "name": "22",
+                                            "type": "text",
+                                            "label": "(W)"
+                                        },
+                                        {
+                                            "name": "23",
+                                            "type": "text",
+                                            "label": "(X)"
+                                        },
+                                        {
+                                            "name": "24",
+                                            "type": "text",
+                                            "label": "(Y)"
+                                        },
+                                        {
+                                            "name": "25",
+                                            "type": "text",
+                                            "label": "(Z)"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Values"
+                                }
+                            ]
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "My Google connection (ljquimpo1992@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "select",
+                                "fromAll",
+                                "map"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option",
+                        "validate": {
+                            "enum": [
+                                "USER_ENTERED",
+                                "RAW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "file",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "rowNumber",
+                        "type": "uinteger",
+                        "label": "Row number",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "values",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "Google Doc Title (A)"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "Google Doc Link (B)"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "Document ID (C)"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "Google Drive File ID (D)"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "URL (E)"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "Date Created (F)"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "Ready for Processing? (G)"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "Status (H)"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "(I)"
+                            },
+                            {
+                                "name": "9",
+                                "type": "text",
+                                "label": "(J)"
+                            },
+                            {
+                                "name": "10",
+                                "type": "text",
+                                "label": "(K)"
+                            },
+                            {
+                                "name": "11",
+                                "type": "text",
+                                "label": "(L)"
+                            },
+                            {
+                                "name": "12",
+                                "type": "text",
+                                "label": "(M)"
+                            },
+                            {
+                                "name": "13",
+                                "type": "text",
+                                "label": "(N)"
+                            },
+                            {
+                                "name": "14",
+                                "type": "text",
+                                "label": "(O)"
+                            },
+                            {
+                                "name": "15",
+                                "type": "text",
+                                "label": "(P)"
+                            },
+                            {
+                                "name": "16",
+                                "type": "text",
+                                "label": "(Q)"
+                            },
+                            {
+                                "name": "17",
+                                "type": "text",
+                                "label": "(R)"
+                            },
+                            {
+                                "name": "18",
+                                "type": "text",
+                                "label": "(S)"
+                            },
+                            {
+                                "name": "19",
+                                "type": "text",
+                                "label": "(T)"
+                            },
+                            {
+                                "name": "20",
+                                "type": "text",
+                                "label": "(U)"
+                            },
+                            {
+                                "name": "21",
+                                "type": "text",
+                                "label": "(V)"
+                            },
+                            {
+                                "name": "22",
+                                "type": "text",
+                                "label": "(W)"
+                            },
+                            {
+                                "name": "23",
+                                "type": "text",
+                                "label": "(X)"
+                            },
+                            {
+                                "name": "24",
+                                "type": "text",
+                                "label": "(Y)"
+                            },
+                            {
+                                "name": "25",
+                                "type": "text",
+                                "label": "(Z)"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Values"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "google-docs:getADocument",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2174431
+            },
+            "mapper": {
+                "filter": "image",
+                "select": "map",
+                "document": "{{1.`2`}}",
+                "includeTabsContent": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 450,
+                    "name": "Get Content of a Document"
+                },
+                "restore": {
+                    "expect": {
+                        "filter": {
+                            "label": "Image"
+                        },
+                        "select": {
+                            "label": "By Mapping"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "My Google connection (ljquimpo1992@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Get Content of a Document",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "dropdown"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "includeTabsContent",
+                        "type": "boolean",
+                        "label": "Include Tabs Content",
+                        "required": true
+                    },
+                    {
+                        "name": "filter",
+                        "type": "select",
+                        "label": "Filter",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "image",
+                                "drawing",
+                                "chart"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "document",
+                        "type": "text",
+                        "label": "Document ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 450
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 5,
+                            "module": "linkedin:CreatePost",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 3765280
+                            },
+                            "filter": {
+                                "name": "Peter Wolf",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.`8`}}",
+                                            "b": "Peter Wolf",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "content": "{{4.text}}",
+                                "visibility": "LOGGED_IN",
+                                "feedDistribution": "NONE",
+                                "isReshareDisabledByAuthor": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1800,
+                                    "y": 0,
+                                    "name": "Post in LinkedIn for Peter Wolf"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "type": {
+                                            "mode": "chose",
+                                            "empty": true
+                                        },
+                                        "mentions": {
+                                            "mode": "chose"
+                                        },
+                                        "visibility": {
+                                            "mode": "chose",
+                                            "label": "Viewable by logged in members only"
+                                        },
+                                        "feedDistribution": {
+                                            "mode": "chose",
+                                            "label": "None"
+                                        },
+                                        "isReshareDisabledByAuthor": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "linkedin2"
+                                            },
+                                            "label": "LJQ My LinkedIn connection (Lemuel John Quimpo)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:linkedin2,linkedin-openid",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "mentions",
+                                        "spec": [
+                                            {
+                                                "name": "entity",
+                                                "type": "select",
+                                                "label": "Entity",
+                                                "options": [
+                                                    {
+                                                        "label": "Person",
+                                                        "value": "member",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:person:1234`. Only mention someone with a connection to the authenticated user.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "label": "Company",
+                                                        "value": "company",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:organization:123456`.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Entity Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "start",
+                                                "type": "number",
+                                                "label": "Start",
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Mentions"
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Media Type",
+                                        "validate": {
+                                            "enum": [
+                                                "ARTICLE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "visibility",
+                                        "type": "select",
+                                        "label": "Visibility",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "PUBLIC",
+                                                "CONNECTIONS",
+                                                "LOGGED_IN"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "feedDistribution",
+                                        "type": "select",
+                                        "label": "Feed Distribution",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "MAIN_FEED",
+                                                "NONE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "isReshareDisabledByAuthor",
+                                        "type": "boolean",
+                                        "label": "Is Reshare Disabled",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 8,
+                            "module": "linkedin:CreatePost",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 3765280
+                            },
+                            "filter": {
+                                "name": "Bryan Wolf",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.`8`}}",
+                                            "b": "Bryan Wolf",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "content": "{{4.text}}",
+                                "visibility": "LOGGED_IN",
+                                "feedDistribution": "NONE",
+                                "isReshareDisabledByAuthor": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 2016,
+                                    "y": 283,
+                                    "name": "Post in LinkedIn for Bryan Wolf"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "type": {
+                                            "mode": "chose",
+                                            "empty": true
+                                        },
+                                        "mentions": {
+                                            "mode": "chose"
+                                        },
+                                        "visibility": {
+                                            "mode": "chose",
+                                            "label": "Viewable by logged in members only"
+                                        },
+                                        "feedDistribution": {
+                                            "mode": "chose",
+                                            "label": "None"
+                                        },
+                                        "isReshareDisabledByAuthor": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "linkedin2"
+                                            },
+                                            "label": "LJQ My LinkedIn connection (Lemuel John Quimpo)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:linkedin2,linkedin-openid",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "mentions",
+                                        "spec": [
+                                            {
+                                                "name": "entity",
+                                                "type": "select",
+                                                "label": "Entity",
+                                                "options": [
+                                                    {
+                                                        "label": "Person",
+                                                        "value": "member",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:person:1234`. Only mention someone with a connection to the authenticated user.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "label": "Company",
+                                                        "value": "company",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:organization:123456`.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Entity Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "start",
+                                                "type": "number",
+                                                "label": "Start",
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Mentions"
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Media Type",
+                                        "validate": {
+                                            "enum": [
+                                                "ARTICLE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "visibility",
+                                        "type": "select",
+                                        "label": "Visibility",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "PUBLIC",
+                                                "CONNECTIONS",
+                                                "LOGGED_IN"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "feedDistribution",
+                                        "type": "select",
+                                        "label": "Feed Distribution",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "MAIN_FEED",
+                                                "NONE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "isReshareDisabledByAuthor",
+                                        "type": "boolean",
+                                        "label": "Is Reshare Disabled",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 10,
+                            "module": "linkedin:CreatePost",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 3765280
+                            },
+                            "filter": {
+                                "name": "Peter Wolf Jr",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.`8`}}",
+                                            "b": "Peter Wolf Jr",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "content": "{{4.text}}",
+                                "visibility": "LOGGED_IN",
+                                "feedDistribution": "NONE",
+                                "isReshareDisabledByAuthor": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1993,
+                                    "y": 612,
+                                    "name": "Post in LinkedIn for Peter Wolf Jr"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "type": {
+                                            "mode": "chose",
+                                            "empty": true
+                                        },
+                                        "mentions": {
+                                            "mode": "chose"
+                                        },
+                                        "visibility": {
+                                            "mode": "chose",
+                                            "label": "Viewable by logged in members only"
+                                        },
+                                        "feedDistribution": {
+                                            "mode": "chose",
+                                            "label": "None"
+                                        },
+                                        "isReshareDisabledByAuthor": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "linkedin2"
+                                            },
+                                            "label": "LJQ My LinkedIn connection (Lemuel John Quimpo)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:linkedin2,linkedin-openid",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "mentions",
+                                        "spec": [
+                                            {
+                                                "name": "entity",
+                                                "type": "select",
+                                                "label": "Entity",
+                                                "options": [
+                                                    {
+                                                        "label": "Person",
+                                                        "value": "member",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:person:1234`. Only mention someone with a connection to the authenticated user.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "label": "Company",
+                                                        "value": "company",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:organization:123456`.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Entity Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "start",
+                                                "type": "number",
+                                                "label": "Start",
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Mentions"
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Media Type",
+                                        "validate": {
+                                            "enum": [
+                                                "ARTICLE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "visibility",
+                                        "type": "select",
+                                        "label": "Visibility",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "PUBLIC",
+                                                "CONNECTIONS",
+                                                "LOGGED_IN"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "feedDistribution",
+                                        "type": "select",
+                                        "label": "Feed Distribution",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "MAIN_FEED",
+                                                "NONE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "isReshareDisabledByAuthor",
+                                        "type": "boolean",
+                                        "label": "Is Reshare Disabled",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 11,
+                            "module": "linkedin:CreatePost",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 3765280
+                            },
+                            "filter": {
+                                "name": "Nicholas Westburg",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.`8`}}",
+                                            "b": "Nicholas Westburg",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "content": "{{4.text}}",
+                                "visibility": "LOGGED_IN",
+                                "feedDistribution": "NONE",
+                                "isReshareDisabledByAuthor": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1800,
+                                    "y": 900,
+                                    "name": "Post in LinkedIn for Nicholas Westburg"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "type": {
+                                            "mode": "chose",
+                                            "empty": true
+                                        },
+                                        "mentions": {
+                                            "mode": "chose"
+                                        },
+                                        "visibility": {
+                                            "mode": "chose",
+                                            "label": "Viewable by logged in members only"
+                                        },
+                                        "feedDistribution": {
+                                            "mode": "chose",
+                                            "label": "None"
+                                        },
+                                        "isReshareDisabledByAuthor": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "linkedin2"
+                                            },
+                                            "label": "LJQ My LinkedIn connection (Lemuel John Quimpo)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:linkedin2,linkedin-openid",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "mentions",
+                                        "spec": [
+                                            {
+                                                "name": "entity",
+                                                "type": "select",
+                                                "label": "Entity",
+                                                "options": [
+                                                    {
+                                                        "label": "Person",
+                                                        "value": "member",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:person:1234`. Only mention someone with a connection to the authenticated user.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "label": "Company",
+                                                        "value": "company",
+                                                        "nested": [
+                                                            {
+                                                                "help": "For example, `urn:li:organization:123456`.",
+                                                                "name": "urn",
+                                                                "type": "text",
+                                                                "label": "Entity URN",
+                                                                "required": true
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Entity Name",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "start",
+                                                "type": "number",
+                                                "label": "Start",
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Mentions"
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Media Type",
+                                        "validate": {
+                                            "enum": [
+                                                "ARTICLE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "visibility",
+                                        "type": "select",
+                                        "label": "Visibility",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "PUBLIC",
+                                                "CONNECTIONS",
+                                                "LOGGED_IN"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "feedDistribution",
+                                        "type": "select",
+                                        "label": "Feed Distribution",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "MAIN_FEED",
+                                                "NONE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "isReshareDisabledByAuthor",
+                                        "type": "boolean",
+                                        "label": "Is Reshare Disabled",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
